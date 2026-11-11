@@ -1,6 +1,6 @@
 # Hi, I'm Tausif Ahmed
 
-**Cybersecurity, GRC and AI security practitioner. Founder of multiple ventures. Open-source contributor in the making.**
+**Cybersecurity, GRC, AI security and post-quantum readiness practitioner. Founder of multiple ventures. Open-source contributor in the making.**
 
 I've spent more than a decade on the side of security that has to stand up in front of an auditor. That means controls, evidence, risk, and the frameworks that tie them together. Now I build products and companies in that space, and I want to give back to the open standards and tools the field runs on.
 
@@ -18,6 +18,11 @@ I've spent more than a decade on the side of security that has to stand up in fr
 - Risks in LLM and agent systems: prompt injection, data leakage, over-privileged tools
 - Making AI systems auditable: what evidence proves a control actually works
 
+**Post-Quantum Cryptography (PQC) readiness**
+- NIST's post-quantum standards: FIPS 203 (ML-KEM), FIPS 204 (ML-DSA), FIPS 205 (SLH-DSA)
+- Crypto inventory first: finding where vulnerable cryptography lives (a cryptographic bill of materials, or CBOM)
+- Migration planning as a governance problem: owners, timelines, vendor dependencies, evidence
+
 **Cybersecurity**
 - Turning security advisories (CISA KEV, vendor PSIRTs) into actions a team can take this week
 - Security programs that pass an audit without becoming paperwork
@@ -30,6 +35,7 @@ I'm looking for projects where a practitioner's view of controls and audits fill
 
 - **Compliance-as-code**: OSCAL, control catalogs, framework mappings
 - **AI security**: OWASP projects for LLM and agentic AI, AI risk taxonomies
+- **Post-quantum migration**: crypto inventory tooling, CBOM, PQC readiness checklists and control mappings
 - **GRC tooling**: open-source evidence collection, policy and control libraries
 - **Docs and reviews**: plain-language explanations of standards, crosswalk reviews
 
