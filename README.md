@@ -43,12 +43,6 @@ If you maintain something in this space and need a reviewer who has sat on both 
 
 ---
 
-### Projects
-
-- **[oscal-dpdp](https://github.com/tausif-ahmed-guardian/oscal-dpdp)**: India's DPDP Rules 2025 as an OSCAL catalog, with profiles for data fiduciaries, significant data fiduciaries and children's data, and evidence-coverage tooling. All 26 requirements checked against the official Gazette text. Apache-2.0.
-
----
-
 ### Ventures
 
 I build companies, not just one company. Current and past:
