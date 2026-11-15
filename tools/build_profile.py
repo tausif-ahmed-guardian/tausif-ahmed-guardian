@@ -658,7 +658,12 @@ def readme(prof, items, files, base, mode):
 
     def pic(name, mobile=True, href=None, width="100%"):
         alt = alt_of(files["assets/light/%s.svg" % name])
-        if mode == "gh":
+        if mode == "gh" and prof.get("theme") in THEMES:
+            # owner-fixed theme (profile.json "theme"): every viewer sees it, light or dark GitHub
+            th = prof["theme"]
+            s = '<source media="(max-width: 600px)" srcset="%s">' % src(th, name + "-m") if mobile else ""
+            el = '<picture>%s<img src="%s" alt="%s" width="%s"></picture>' % (s, src(th, name), x(alt), width)
+        elif mode == "gh":
             s = ""
             if mobile:
                 s += '<source media="(max-width: 600px) and (prefers-color-scheme: dark)" srcset="%s">' % src("dark", name + "-m")
