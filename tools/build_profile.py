@@ -286,6 +286,61 @@ def portrait(prof, th, cx, cy, r):
                cx, cy, r + 9, th["acc"]))
 
 
+def radar(th, w, h, mob):
+    """Hero motion, all looping: a drifting dot field, a full-height scanline, and a radar with a rotating
+    sweep, blips that light as the beam passes, orbiting nodes and a pulsing shield. CSS + SMIL only, so it
+    runs inside GitHub's <img>; the base (un-animated) state is a complete, readable picture."""
+    cx, cy, R = (w - 64, 74, 46) if mob else (680, 150, 118)
+    period = 4.0
+    o = ['<defs>'
+         '<pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1" fill="%s"/>'
+         '<animateTransform attributeName="patternTransform" type="translate" from="0 0" to="22 22" dur="6s" repeatCount="indefinite"/></pattern>'
+         '<radialGradient id="dfade" cx=".72" cy=".5" r=".75"><stop offset="0" stop-color="#fff" stop-opacity=".9"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>'
+         '<mask id="dmask"><rect width="%d" height="%d" fill="url(#dfade)"/></mask>'
+         '<linearGradient id="scan" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="%s" stop-opacity="0"/>'
+         '<stop offset=".85" stop-color="%s" stop-opacity=".22"/><stop offset="1" stop-color="%s" stop-opacity=".55"/></linearGradient>'
+         '<linearGradient id="beam" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="%s" stop-opacity="0"/>'
+         '<stop offset="1" stop-color="%s" stop-opacity=".55"/></linearGradient>'
+         '</defs>' % (th["mute"], w, h, th["acc"], th["acc"], th["acc"], th["acc"], th["acc"])]
+    o.append('<g clip-path="url(#hc)"><rect width="%d" height="%d" fill="url(#dots)" mask="url(#dmask)" opacity=".55"/>' % (w, h))
+    o.append('<rect x="0" y="-70" width="%d" height="70" fill="url(#scan)" opacity=".7">'
+             '<animateTransform attributeName="transform" type="translate" values="0 0;0 %d" dur="5.5s" repeatCount="indefinite"/></rect>'
+             % (w, h + 70))
+    # radar rings + crosshair
+    for k, rr in enumerate((R, R * 2 / 3, R / 3)):
+        o.append('<circle cx="%d" cy="%d" r="%.1f" fill="none" stroke="%s" stroke-opacity="%.2f"/>' % (cx, cy, rr, th["acc"], .45 - k * .1))
+    o.append('<path d="M%d %dh%d M%d %dv%d" stroke="%s" stroke-opacity=".25"/>' % (cx - R, cy, 2 * R, cx, cy - R, 2 * R, th["acc"]))
+    # expanding ping
+    o.append('<circle cx="%d" cy="%d" r="%.1f" fill="none" stroke="%s" stroke-width="1.5" class="ring" style="animation-duration:%.1fs"/>'
+             % (cx, cy, R / 3, th["acc"], period))
+    # rotating sweep wedge (40 degrees) with its leading edge
+    import math
+    a0 = math.radians(-40)
+    o.append('<g><path d="M%d %d L%.1f %.1f A%d %d 0 0 1 %d %d Z" fill="url(#beam)"/>'
+             '<path d="M%d %dH%d" stroke="%s" stroke-width="1.6"/>'
+             '<animateTransform attributeName="transform" type="rotate" from="0 %d %d" to="360 %d %d" dur="%.1fs" repeatCount="indefinite"/></g>'
+             % (cx, cy, cx + R * math.cos(a0), cy + R * math.sin(a0), R, R, cx + R, cy, cx, cy, cx + R, th["acc"], cx, cy, cx, cy, period))
+    # blips: lit when the beam passes their angle
+    for ang, dist in ((25, .8), (110, .55), (200, .9), (290, .4), (330, .7)):
+        bx, by = cx + R * dist * math.cos(math.radians(ang)), cy + R * dist * math.sin(math.radians(ang))
+        o.append('<circle cx="%.1f" cy="%.1f" r="3.2" fill="%s"><animate attributeName="opacity" values="1;.12;.12" keyTimes="0;.6;1" '
+                 'dur="%.1fs" begin="%.2fs" repeatCount="indefinite"/></circle>' % (bx, by, th["acc"], period, ang / 360.0 * period))
+    # orbiting nodes on an outer path
+    orb = R + (10 if mob else 22)
+    o.append('<circle cx="%d" cy="%d" r="%d" fill="none" stroke="%s" stroke-opacity=".18" stroke-dasharray="2 5"/>' % (cx, cy, orb, th["acc"]))
+    o.append('<g>%s<animateTransform attributeName="transform" type="rotate" from="0 %d %d" to="-360 %d %d" dur="16s" repeatCount="indefinite"/></g>' % (
+        "".join('<circle cx="%.1f" cy="%.1f" r="%s" fill="%s"/>' % (cx + orb * math.cos(math.radians(t)), cy + orb * math.sin(math.radians(t)),
+                                                                   2.6 if i else 3.6, th["acc"]) for i, t in enumerate((0, 120, 240))), cx, cy, cx, cy))
+    # centre shield
+    s = 1.6 if not mob else 1.0
+    o.append('<g transform="translate(%.1f %.1f) scale(%.1f)"><circle cx="8" cy="8" r="11" fill="%s" stroke="%s" stroke-opacity=".6">'
+             '<animate attributeName="r" values="11;13;11" dur="2.4s" repeatCount="indefinite"/></circle>'
+             '<g fill="none" stroke="%s" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">%s</g></g>'
+             % (cx - 8 * s, cy - 8 * s, s, th["panel2"], th["acc"], th["acc"], ICONS["shield"]))
+    o.append('</g>')
+    return "".join(o)
+
+
 def hero(prof, th, w):
     mob = w == W_M
     h = 330 if mob else 300
@@ -293,39 +348,11 @@ def hero(prof, th, w):
     b = ['<defs><radialGradient id="g" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="%s" stop-opacity=".55"/>'
          '<stop offset="1" stop-color="%s" stop-opacity="0"/></radialGradient>'
          '<clipPath id="hc"><rect x="1" y="1" width="%d" height="%d" rx="14"/></clipPath></defs>' % (
-             th["glow"], th["glow"], w - 2, h - 2), card(w, h, th, 14)]
+             th["glow"], th["glow"], w - 2, h - 2), card(w, h, th, 14), tracer(w, h, th, 14, dur=9)]
     b.append('<g clip-path="url(#hc)"><circle cx="%d" cy="0" r="%d" fill="url(#g)" class="sl"/>'
              '<circle cx="%d" cy="%d" r="%d" fill="url(#g)" opacity=".35" class="sl" style="animation-duration:13s"/></g>'
              % (w - 60, 300 if not mob else 220, 80, h, 160))
-    if not mob:
-        ox, oy, gs, cols, rows_n = 600, 64, 36, 6, 5
-        k = 0
-        for j in range(rows_n):
-            b.append('<path d="M%d %dh%d" stroke="%s" pathLength="1" class="dr"%s/>' % (
-                ox, oy + j * gs, gs * (cols - 1), th["line"], d(0.3 + j * 0.08)))
-        for i in range(cols):
-            b.append('<path d="M%d %dv%d" stroke="%s" pathLength="1" class="dr"%s/>' % (
-                ox + i * gs, oy, gs * (rows_n - 1), th["line"], d(0.5 + i * 0.08)))
-        for i in range(cols):
-            for j in range(rows_n):
-                on = (i * 7 + j * 3) % 5 == 0
-                cx, cy = ox + i * gs, oy + j * gs
-                if on:
-                    b.append('<circle cx="%d" cy="%d" r="4" fill="none" stroke="%s" class="ring"%s/>' % (
-                        cx, cy, th["acc"], d(1.2 + k * 0.45)))
-                    k += 1
-                b.append('<circle cx="%d" cy="%d" r="%s" fill="%s" class="pp%s"%s/>' % (
-                    cx, cy, 4 if on else 2.5, th["acc"] if on else th["mute"], " pl" if on else "",
-                    d(0.8 + (i + j) * 0.04)))
-        routes = ["M%d %d h%d v%d h%d v%d" % (ox, oy, gs * 2, gs * 2, gs * 3, gs * 2),
-                  "M%d %d v%d h%d v%d h%d" % (ox + gs * 5, oy, gs * 3, -gs * 2, gs, -gs * 3),
-                  "M%d %d h%d v%d h%d" % (ox, oy + gs * 4, gs * 4, -gs * 3, gs)]
-        for r_i, route in enumerate(routes):
-            b.append('<path d="%s" fill="none" stroke="%s" stroke-width="1.6" pathLength="1" class="tr" '
-                     'style="animation-duration:%ds;animation-delay:-%ds" stroke-opacity=".8"/>' % (
-                         route, th["acc"], 6 + r_i * 2, r_i * 2))
-            b.append('<circle r="3" fill="%s" class="fo"%s><animateMotion dur="%ds" repeatCount="indefinite" '
-                     'path="%s"/></circle>' % (th["acc"], d(1.6), 5 + r_i * 2, route))
+    b.append(radar(th, w, h, mob))
     if prof.get("_photo_b64"):
         b.append(portrait(prof, th, *((w - 58, 64, 36) if mob else (690, 136, 76))))
     y = pad + 18
@@ -333,7 +360,12 @@ def hero(prof, th, w):
     b.append('<rect x="%.1f" y="%d" width="7" height="13" fill="%s" class="bl"/>' % (
         pad + tw("~/" + prof["login"], 12, mono=True) + 4, y - 11, th["acc"]))
     y += 50 if not mob else 44
-    b.append(text(pad, y, prof["name"], 34 if mob else 44, th["ink"], weight=800, cls="fi", extra=d(0.12)))
+    b.append('<defs><linearGradient id="shine" gradientUnits="userSpaceOnUse" x1="-260" y1="0" x2="0" y2="0">'
+             '<stop offset="0" stop-color="%s"/><stop offset=".5" stop-color="%s"/><stop offset="1" stop-color="%s"/>'
+             '<animate attributeName="x1" values="-260;%d;%d" keyTimes="0;.55;1" dur="7s" repeatCount="indefinite"/>'
+             '<animate attributeName="x2" values="0;%d;%d" keyTimes="0;.55;1" dur="7s" repeatCount="indefinite"/>'
+             '</linearGradient></defs>' % (th["ink"], th["acc"], th["ink"], w, w, w + 260, w + 260))
+    b.append(text(pad, y, prof["name"], 34 if mob else 44, "url(#shine)", weight=800, cls="fi", extra=d(0.12)))
     y += 28
     b.append(text(pad, y, prof["title"], 15, th["sub"], weight=600, cls="fi", extra=d(0.24)))
     y += 44
