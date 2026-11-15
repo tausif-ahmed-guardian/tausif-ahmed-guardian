@@ -1,0 +1,40 @@
+name: Refresh profile
+
+# Rebuilds README.md and assets/ from GitHub search so the Upstream work panel shows the live
+# merged / in-review state without anyone running anything. Commits only when the output changed.
+on:
+  schedule:
+    - cron: "17 * * * *"
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ["profile.json", "tools/build_profile.py", ".github/workflows/profile.yml"]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-profile
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Build
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 tools/build_profile.py
+      - name: Commit if changed
+        run: |
+          git add -A README.md assets
+          if git diff --cached --quiet; then
+            echo "profile unchanged"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898900+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Profile: refresh upstream work from GitHub"
+          git push

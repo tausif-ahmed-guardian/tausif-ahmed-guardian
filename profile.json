@@ -1,0 +1,82 @@
+{
+  "_source": "Every biographical line below is taken from Tausif's own live profile README (tausif-ahmed-guardian/tausif-ahmed-guardian, commits of 11 Nov 2026 authored by him). Add nothing here that he has not stated himself.",
+  "login": "tausif-ahmed-guardian",
+  "name": "Tausif Ahmed",
+  "title": "Founder and CEO, Purplecop Security",
+  "tagline": "Cybersecurity, GRC, AI security and post-quantum readiness practitioner.",
+  "rotating": [
+    "AI systems",
+    "compliance evidence",
+    "post-quantum migration",
+    "third-party risk"
+  ],
+  "question": "Which control proves this is safe, and what evidence shows it works?",
+  "about": "I've spent more than a decade on the side of security that has to stand up in front of an auditor: controls, evidence, risk, and the frameworks that tie them together. Now I build products and companies in that space, and I give back to the open standards and tools the field runs on.",
+  "links": [
+    {
+      "id": "linkedin",
+      "label": "LinkedIn",
+      "icon": "in",
+      "url": "https://www.linkedin.com/in/tausif-ahmed-b5b8962a/"
+    },
+    {
+      "id": "purplecop",
+      "label": "Purplecop Security",
+      "icon": "shield",
+      "url": "https://purplecop.com"
+    }
+  ],
+  "projects": [],
+  "areas": {
+    "ruvnet/QuDAG": "Post-quantum readiness",
+    "OrchIntel/ioa-core": "AI governance",
+    "meta-llama/PurpleLlama": "AI security",
+    "NVIDIA/garak": "AI security",
+    "microsoft/agent-governance-toolkit": "AI governance",
+    "wlfghdr/agentic-enterprise": "AI governance"
+  },
+  "focus": [
+    {
+      "id": "grc",
+      "title": "Governance, risk and compliance",
+      "icon": "ledger",
+      "text": "ISO 27001, SOC 2, CMMI, GDPR, India's DPDP Act, SOX 404 and ITGC. One control mapped to many requirements, evidence automation, third-party risk."
+    },
+    {
+      "id": "ai",
+      "title": "AI security and governance",
+      "icon": "shield",
+      "text": "ISO/IEC 42001, NIST AI RMF and the EU AI Act. Prompt injection, data leakage and over-privileged tools, and the evidence that proves an AI control works."
+    },
+    {
+      "id": "pqc",
+      "title": "Post-quantum readiness",
+      "icon": "lattice",
+      "text": "FIPS 203, 204 and 205. Crypto inventory first (CBOM), then migration run as a governance problem: owners, timelines, vendor dependencies, evidence."
+    },
+    {
+      "id": "sec",
+      "title": "Cybersecurity",
+      "icon": "loop",
+      "text": "Turning advisories (CISA KEV, vendor PSIRTs) into actions a team can take this week. Security programmes that pass an audit without becoming paperwork."
+    }
+  ],
+  "credentials": [
+    "ISO 27001 Lead Auditor"
+  ],
+  "ventures": [
+    {
+      "name": "Purplecop Security",
+      "role": "Founder and CEO",
+      "note": "GRC platform and compliance services"
+    },
+    {
+      "name": "UpSkill Finder",
+      "role": "CEO, 2019 to 2024",
+      "note": "Cybersecurity and compliance training"
+    }
+  ],
+  "experience": "Earlier: compliance roles at JLL (for Google India) and American Express, covering SOX, ITGC, vendor risk and EMEA audit.",
+  "_photo_note": "Photo removed from the hero on 2026-11-14 at Tausif's request: it is now his GitHub avatar, so showing it twice is redundant. Cropped file kept at assets/src/photo.jpg.",
+  "verb": "Guarding"
+}
