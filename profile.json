@@ -14,6 +14,12 @@
   "about": "I've spent more than a decade on the side of security that has to stand up in front of an auditor: controls, evidence, risk, and the frameworks that tie them together. Now I build products and companies in that space, and I give back to the open standards and tools the field runs on.",
   "links": [
     {
+      "id": "site",
+      "label": "Website",
+      "icon": "globe",
+      "url": "https://tausif-ahmed-guardian.github.io"
+    },
+    {
       "id": "linkedin",
       "label": "LinkedIn",
       "icon": "in",
